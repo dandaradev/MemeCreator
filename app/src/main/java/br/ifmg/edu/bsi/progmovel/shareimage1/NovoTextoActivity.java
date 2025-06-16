@@ -9,15 +9,19 @@ import android.widget.EditText;
 
 public class NovoTextoActivity extends AppCompatActivity {
 
-    public static String EXTRA_TEXTO_ATUAL = "br.ifmg.edu.bsi.progmovel.shareimage1.texto_atual";
+    public static String EXTRA_TEXTO_SUPERIOR_ATUAL = "br.ifmg.edu.bsi.progmovel.shareimage1.texto_superior_atual";
+    public static String EXTRA_TEXTO_INFERIOR_ATUAL = "br.ifmg.edu.bsi.progmovel.shareimage1.texto_inferior_atual";
     public static String EXTRA_COR_ATUAL = "br.ifmg.edu.bsi.progmovel.shareimage1.cor_atual";
-    public static String EXTRA_NOVO_TEXTO = "br.ifmg.edu.bsi.progmovel.shareimage1.novo_texto";
+    public static String EXTRA_NOVO_TEXTO_SUPERIOR = "br.ifmg.edu.bsi.progmovel.shareimage1.novo_texto_superior";
+    public static String EXTRA_NOVO_TEXTO_INFERIOR = "br.ifmg.edu.bsi.progmovel.shareimage1.novo_texto_superior_inferior";
+
     public static String EXTRA_NOVA_COR = "br.ifmg.edu.bsi.progmovel.shareimage1.nova_cor";
 
     public static String EXTRA_TAMANHO_ATUAL= "br.ifmg.edu.bsi.progmovel.shareimage1.tamanho_atual";
     public static String EXTRA_NOVO_TAMANHO= "br.ifmg.edu.bsi.progmovel.shareimage1.novo_tamanho";
 
-    private EditText etTexto;
+    private EditText etTextoSuperior;
+    private EditText etTextoInferior;
     private EditText etCor;
     private EditText etTamanho;
 
@@ -27,25 +31,30 @@ public class NovoTextoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_novo_texto);
 
-        etTexto = findViewById(R.id.etTexto);
+        etTextoSuperior = findViewById(R.id.etTextoSuperior);
+        etTextoInferior = findViewById(R.id.etTextoInferior);
         etCor = findViewById(R.id.etCor);
         etTamanho= findViewById(R.id.etTamanho);
 
         Intent intent = getIntent();
-        String textoAtual = intent.getStringExtra(EXTRA_TEXTO_ATUAL);
+        String textoSuperiorAtual = intent.getStringExtra(EXTRA_TEXTO_SUPERIOR_ATUAL);
+        String textoInferiorAtual = intent.getStringExtra(EXTRA_TEXTO_INFERIOR_ATUAL);
         String corAtual = intent.getStringExtra(EXTRA_COR_ATUAL);
         String tamanhoAtual = intent.getStringExtra(EXTRA_TAMANHO_ATUAL);
-        etTexto.setText(textoAtual);
+        etTextoSuperior.setText(textoSuperiorAtual);
+        etTextoInferior.setText(textoInferiorAtual);
         etCor.setText(corAtual);
         etTamanho.setText(tamanhoAtual);
     }
 
     public void enviarNovoTexto(View v) {
-        String novoTexto = etTexto.getText().toString();
+        String novoTextoSuperior = etTextoSuperior.getText().toString();
+        String novoTextoInferior = etTextoInferior.getText().toString();
         String novaCor = etCor.getText().toString();
         String novoTamanho = etTamanho.getText().toString();
         Intent intent = new Intent();
-        intent.putExtra(EXTRA_NOVO_TEXTO, novoTexto);
+        intent.putExtra(EXTRA_NOVO_TEXTO_SUPERIOR, novoTextoSuperior);
+        intent.putExtra(EXTRA_NOVO_TEXTO_INFERIOR, novoTextoInferior);
         intent.putExtra(EXTRA_NOVA_COR, novaCor);
         intent.putExtra(EXTRA_NOVO_TAMANHO, novoTamanho);
         setResult(RESULT_OK, intent);

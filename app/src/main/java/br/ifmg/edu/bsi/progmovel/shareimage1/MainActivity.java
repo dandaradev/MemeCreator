@@ -48,14 +48,16 @@ public class MainActivity extends AppCompatActivity {
                     if (result.getResultCode() == Activity.RESULT_OK) {
                         Intent intent = result.getData();
                         if (intent != null) {
-                            String novoTexto = intent.getStringExtra(NovoTextoActivity.EXTRA_NOVO_TEXTO);
+                            String novoTextoSuperior = intent.getStringExtra(NovoTextoActivity.EXTRA_NOVO_TEXTO_SUPERIOR);
+                            String novoTextoInferior = intent.getStringExtra(NovoTextoActivity.EXTRA_NOVO_TEXTO_INFERIOR);
                             String novaCor = intent.getStringExtra(NovoTextoActivity.EXTRA_NOVA_COR);
                             String novoTamanho = intent.getStringExtra(NovoTextoActivity.EXTRA_NOVO_TAMANHO);
                             if (novaCor == null) {
                                 Toast.makeText(MainActivity.this, "Cor desconhecida. Usando preto no lugar.", Toast.LENGTH_SHORT).show();
                                 novaCor = "BLACK";
                             }
-                            memeCreator.setTexto(novoTexto);
+                            memeCreator.setTextoSuperior(novoTextoSuperior);
+                            memeCreator.setTextoInferior(novoTextoInferior);
                             memeCreator.setCorTexto(Color.parseColor(novaCor.toUpperCase()));
                             memeCreator.setTamanhoTexto(Integer.parseInt(novoTamanho));
                             mostrarImagem();
@@ -116,13 +118,14 @@ public class MainActivity extends AppCompatActivity {
 
         Bitmap imagemFundo = BitmapFactory.decodeResource(getResources(), R.drawable.fry_meme);
 
-        memeCreator = new MemeCreator("Olá Dandara!", Color.WHITE, 64,  imagemFundo, getResources().getDisplayMetrics());
+        memeCreator = new MemeCreator("Olá", "Dandara!", Color.WHITE, 64,  imagemFundo, getResources().getDisplayMetrics());
         mostrarImagem();
     }
 
     public void iniciarMudarTexto(View v) {
         Intent intent = new Intent(this, NovoTextoActivity.class);
-        intent.putExtra(NovoTextoActivity.EXTRA_TEXTO_ATUAL, memeCreator.getTexto());
+        intent.putExtra(NovoTextoActivity.EXTRA_TEXTO_SUPERIOR_ATUAL, memeCreator.getTextoSuperior());
+        intent.putExtra(NovoTextoActivity.EXTRA_TEXTO_INFERIOR_ATUAL, memeCreator.getTextoInferior());
         intent.putExtra(NovoTextoActivity.EXTRA_COR_ATUAL, converterCor(memeCreator.getCorTexto()));
         intent.putExtra(NovoTextoActivity.EXTRA_TAMANHO_ATUAL, String.valueOf(memeCreator.getTamanhoTexto()));
 
