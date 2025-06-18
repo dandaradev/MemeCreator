@@ -50,16 +50,21 @@ public class MainActivity extends AppCompatActivity {
                         if (intent != null) {
                             String novoTextoSuperior = intent.getStringExtra(NovoTextoActivity.EXTRA_NOVO_TEXTO_SUPERIOR);
                             String novoTextoInferior = intent.getStringExtra(NovoTextoActivity.EXTRA_NOVO_TEXTO_INFERIOR);
-                            String novaCor = intent.getStringExtra(NovoTextoActivity.EXTRA_NOVA_COR);
-                            String novoTamanho = intent.getStringExtra(NovoTextoActivity.EXTRA_NOVO_TAMANHO);
-                            if (novaCor == null) {
+                            String novaCorSuperior = intent.getStringExtra(NovoTextoActivity.EXTRA_NOVA_COR_SUPERIOR);
+                            String novaCorInferior = intent.getStringExtra(NovoTextoActivity.EXTRA_NOVA_COR_INFERIOR);
+                            String novoTamanhoSuperior = intent.getStringExtra(NovoTextoActivity.EXTRA_NOVO_TAMANHO_SUPERIOR);
+                            String novoTamanhoInferior = intent.getStringExtra(NovoTextoActivity.EXTRA_NOVO_TAMANHO_INFERIOR);
+                            if (novaCorSuperior == null && novaCorInferior == null) {
                                 Toast.makeText(MainActivity.this, "Cor desconhecida. Usando preto no lugar.", Toast.LENGTH_SHORT).show();
-                                novaCor = "BLACK";
+                                novaCorSuperior = "BLACK";
+                                novaCorInferior = "BLACK";
                             }
                             memeCreator.setTextoSuperior(novoTextoSuperior);
                             memeCreator.setTextoInferior(novoTextoInferior);
-                            memeCreator.setCorTexto(Color.parseColor(novaCor.toUpperCase()));
-                            memeCreator.setTamanhoTexto(Integer.parseInt(novoTamanho));
+                            memeCreator.setCorTextoSuperior(Color.parseColor(novaCorSuperior.toUpperCase()));
+                            memeCreator.setCorTextoInferior(Color.parseColor(novaCorInferior.toUpperCase()));
+                            memeCreator.setTamanhoTextoSuperior(Integer.parseInt(novoTamanhoSuperior));
+                            memeCreator.setTamanhoTextoInferior(Integer.parseInt(novoTamanhoInferior));
                             mostrarImagem();
                         }
                     }
@@ -118,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
 
         Bitmap imagemFundo = BitmapFactory.decodeResource(getResources(), R.drawable.fry_meme);
 
-        memeCreator = new MemeCreator("Olá", "Dandara!", Color.WHITE, 64,  imagemFundo, getResources().getDisplayMetrics());
+        memeCreator = new MemeCreator("Olá", "Dandara!", Color.WHITE, Color.WHITE, 64, 64,  imagemFundo, getResources().getDisplayMetrics());
         mostrarImagem();
     }
 
@@ -126,8 +131,11 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, NovoTextoActivity.class);
         intent.putExtra(NovoTextoActivity.EXTRA_TEXTO_SUPERIOR_ATUAL, memeCreator.getTextoSuperior());
         intent.putExtra(NovoTextoActivity.EXTRA_TEXTO_INFERIOR_ATUAL, memeCreator.getTextoInferior());
-        intent.putExtra(NovoTextoActivity.EXTRA_COR_ATUAL, converterCor(memeCreator.getCorTexto()));
-        intent.putExtra(NovoTextoActivity.EXTRA_TAMANHO_ATUAL, String.valueOf(memeCreator.getTamanhoTexto()));
+        intent.putExtra(NovoTextoActivity.EXTRA_COR_ATUAL_SUPERIOR, converterCor(memeCreator.getCorTextoSuperior()));
+        intent.putExtra(NovoTextoActivity.EXTRA_COR_ATUAL_INFERIOR, converterCor(memeCreator.getCorTextoInferior()));
+        intent.putExtra(NovoTextoActivity.EXTRA_TAMANHO_ATUAL_SUPERIOR, String.valueOf(memeCreator.getTamanhoTextoSuperior()));
+        intent.putExtra(NovoTextoActivity.EXTRA_TAMANHO_ATUAL_INFERIOR, String.valueOf(memeCreator.getTamanhoTextoInferior()));
+
 
 
 

@@ -15,8 +15,12 @@ import android.util.DisplayMetrics;
 public class MemeCreator {
     private String textoSuperior;
     private String textoInferior;
-    private int corTexto;
-    private int tamanhoTexto;
+    private int corTextoSuperior;
+    private int corTextoInferior;
+
+    private int tamanhoTextoSuperior;
+    private int tamanhoTextoInferior;
+
 
     private Bitmap fundo;
     private DisplayMetrics displayMetrics;
@@ -25,11 +29,13 @@ public class MemeCreator {
     private Bitmap meme;
     private boolean dirty; // se true, significa que o meme precisa ser recriado.
 
-    public MemeCreator(String textoSuperior, String textoInferior, int corTexto, int tamanhoTexto, Bitmap fundo, DisplayMetrics displayMetrics) {
+    public MemeCreator(String textoSuperior, String textoInferior, int corTextoSuperior, int corTextoInferior, int tamanhoTextoSuperior, int tamanhoTextoInferior, Bitmap fundo, DisplayMetrics displayMetrics) {
         this.textoSuperior = textoSuperior;
         this.textoInferior = textoInferior;
-        this.corTexto = corTexto;
-        this.tamanhoTexto = tamanhoTexto;
+        this.corTextoSuperior = corTextoSuperior;
+        this.corTextoInferior = corTextoInferior;
+        this.tamanhoTextoSuperior = tamanhoTextoSuperior;
+        this.tamanhoTextoInferior = tamanhoTextoInferior;
         this.fundo = fundo;
         this.displayMetrics = displayMetrics;
         this.meme = criarImagem();
@@ -54,21 +60,39 @@ public class MemeCreator {
     }
 
 
-    public int getCorTexto() {
-        return corTexto;
+    public int getCorTextoSuperior() {
+        return corTextoSuperior;
     }
 
-    public void setCorTexto(int corTexto) {
-        this.corTexto = corTexto;
+    public void setCorTextoSuperior(int corTextoSuperior) {
+        this.corTextoSuperior = corTextoSuperior;
         dirty = true;
     }
 
-    public int getTamanhoTexto() {
-        return tamanhoTexto;
+    public int getCorTextoInferior() {
+        return corTextoInferior;
     }
 
-    public void setTamanhoTexto(int tamanhoTexto) {
-        this.tamanhoTexto = tamanhoTexto;
+    public void setCorTextoInferior(int corTextoInferior) {
+        this.corTextoInferior = corTextoInferior;
+        dirty = true;
+    }
+
+    public int getTamanhoTextoSuperior() {
+        return tamanhoTextoSuperior;
+    }
+
+    public void setTamanhoTextoSuperior(int tamanhoTextoSuperior) {
+        this.tamanhoTextoSuperior = tamanhoTextoSuperior;
+        dirty= true;
+    }
+
+    public int getTamanhoTextoInferior() {
+        return tamanhoTextoInferior;
+    }
+
+    public void setTamanhoTextoInferior(int tamanhoTextoInferior) {
+        this.tamanhoTextoInferior = tamanhoTextoInferior;
         dirty= true;
     }
     public Bitmap getFundo() {
@@ -107,21 +131,29 @@ public class MemeCreator {
         Canvas canvas = new Canvas(bitmap);
 
         Paint paint = new Paint();
+        Paint paint2 = new Paint();
+
 
         Bitmap scaledFundo = Bitmap.createScaledBitmap(fundo, width, height, true);
         canvas.drawBitmap(scaledFundo, 0, 0, new Paint());
 
-        paint.setColor(corTexto);
+        paint.setColor(corTextoSuperior);
+        paint2.setColor(corTextoInferior);
         paint.setAntiAlias(true);
-        paint.setTextSize(tamanhoTexto);
+        paint2.setAntiAlias(true);
+        paint.setTextSize(tamanhoTextoSuperior);
+        paint2.setTextSize(tamanhoTextoInferior);
         paint.setTypeface(Typeface.create("sans-serif-condensed", Typeface.BOLD));
+        paint2.setTypeface(Typeface.create("sans-serif-condensed", Typeface.BOLD));
         paint.setTextAlign(Paint.Align.CENTER);
+        paint2.setTextAlign(Paint.Align.CENTER);
+
 
         // desenhar texto em cima
         canvas.drawText(textoSuperior, (width / 2.f), (height * 0.15f), paint);
 
         // desenhar texto embaixo
-        canvas.drawText(textoInferior, (width / 2.f), (height * 0.9f), paint);
+        canvas.drawText(textoInferior, (width / 2.f), (height * 0.9f), paint2);
         return bitmap;
     }
 }
