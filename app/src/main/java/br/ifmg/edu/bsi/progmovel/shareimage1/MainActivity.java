@@ -120,7 +120,6 @@ public class MainActivity extends AppCompatActivity {
             return true;
         });
 
-
         Bitmap imagemFundo = BitmapFactory.decodeResource(getResources(), R.drawable.fry_meme);
 
         memeCreator = new MemeCreator("Olá", "Dandara!", Color.WHITE, Color.WHITE, 64, 64,  imagemFundo, getResources().getDisplayMetrics());
@@ -143,6 +142,31 @@ public class MainActivity extends AppCompatActivity {
 
         startNovoTexto.launch(intent);
     }
+
+
+    private final ActivityResultLauncher<Intent> iniciarTemplates = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == Activity.RESULT_OK) {
+                    Intent data = result.getData();
+                    if (data != null) {
+                        String nomeTemplate = data.getStringExtra("templateSelecionado");
+                        int idImagem = getResources().getIdentifier(nomeTemplate, "drawable", getPackageName());
+                        Bitmap imagemFundo = BitmapFactory.decodeResource(getResources(), idImagem);
+                        memeCreator.setFundo(imagemFundo);
+                        mostrarImagem();
+                    }
+                }
+            });
+
+
+    public void abrirTemplates(View view) {
+        Intent intent = new Intent(this, TemplateActivity.class);
+        iniciarTemplates.launch(intent);
+    }
+
+
+
 
     public String converterCor(int cor) {
         switch (cor) {

@@ -55,9 +55,7 @@
                 android:contentDescription="@string/mudar_texto"
                 android:onClick="iniciarMudarTexto"
                 app:icon="@drawable/baseline_edit_note_24"
-                app:layout_constraintBaseline_toBaselineOf="@+id/button2"
-                app:layout_constraintEnd_toStartOf="@+id/button2"
-                app:layout_constraintHorizontal_chainStyle="spread"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
 
             <Button
@@ -70,10 +68,22 @@
                 android:onClick="iniciarMudarFundo"
                 app:icon="@drawable/baseline_image_search_24"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/button" />
+                app:layout_constraintStart_toEndOf="@id/button" />
+
+            <Button
+                android:id="@+id/buttonTemplate"
+                style="@style/Widget.Material3.Button.IconButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:contentDescription="@string/templates"
+                android:onClick="abrirTemplates"
+                app:icon="@android:drawable/ic_dialog_dialer"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@id/button2" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
+
     </HorizontalScrollView>
 
     <View
