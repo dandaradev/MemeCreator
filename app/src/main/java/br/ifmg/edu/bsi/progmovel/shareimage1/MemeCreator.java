@@ -29,6 +29,11 @@ public class MemeCreator {
     private Bitmap meme;
     private boolean dirty; // se true, significa que o meme precisa ser recriado.
 
+    private float offsetYSuperior = 0.15f; // Posição Y padrão do texto superior (15% da altura)
+    private float offsetYInferior = 0.9f;  // Posição Y padrão do texto inferior (90% da altura)
+    private float offsetXSuperior = 0.5f; // posição X padrão (centro)
+    private float offsetXInferior = 0.5f;
+
     public MemeCreator(String textoSuperior, String textoInferior, int corTextoSuperior, int corTextoInferior, int tamanhoTextoSuperior, int tamanhoTextoInferior, Bitmap fundo, DisplayMetrics displayMetrics) {
         this.textoSuperior = textoSuperior;
         this.textoInferior = textoInferior;
@@ -41,6 +46,26 @@ public class MemeCreator {
         this.meme = criarImagem();
         this.dirty = false;
     }
+
+    public void setOffsetYSuperior(float offset) {
+        this.offsetYSuperior = offset;
+        dirty = true;
+    }
+
+    public void setOffsetYInferior(float offset) {
+        this.offsetYInferior = offset;
+        dirty = true;
+    }
+    public void setOffsetXSuperior(float offset) {
+        this.offsetXSuperior = offset;
+        dirty = true;
+    }
+
+    public void setOffsetXInferior(float offset) {
+        this.offsetXInferior = offset;
+        dirty = true;
+    }
+
 
     public String getTextoSuperior() {
         return textoSuperior;
@@ -149,11 +174,10 @@ public class MemeCreator {
         paint2.setTextAlign(Paint.Align.CENTER);
 
 
-        // desenhar texto em cima
-        canvas.drawText(textoSuperior, (width / 2.f), (height * 0.15f), paint);
+        canvas.drawText(textoSuperior, (width * offsetXSuperior), (height * offsetYSuperior), paint);
+        canvas.drawText(textoInferior, (width * offsetXInferior), (height * offsetYInferior), paint2);
 
-        // desenhar texto embaixo
-        canvas.drawText(textoInferior, (width / 2.f), (height * 0.9f), paint2);
+
         return bitmap;
     }
 }

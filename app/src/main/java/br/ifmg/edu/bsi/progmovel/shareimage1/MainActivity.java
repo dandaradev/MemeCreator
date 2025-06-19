@@ -16,7 +16,9 @@ import android.provider.MediaStore;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
-
+import android.os.Vibrator;
+import android.os.VibrationEffect;
+import android.content.Context;
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
@@ -28,6 +30,8 @@ import androidx.activity.result.contract.ActivityResultContracts.StartActivityFo
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.exifinterface.media.ExifInterface;
+import android.view.MotionEvent;
+
 
 import java.io.BufferedOutputStream;
 import java.io.FileDescriptor;
@@ -41,6 +45,16 @@ public class MainActivity extends AppCompatActivity {
 
     private ImageView imageView;
     private MemeCreator memeCreator;
+    private boolean textoSuperiorSelecionado = false;
+    private boolean textoInferiorSelecionado = false;
+    private float startX;
+
+    private float offsetYSuperior = 0.15f;
+    private float offsetYInferior = 0.9f;
+    private float offsetXSuperior = 0.5f;
+    private float offsetXInferior = 0.5f;
+
+
     private final ActivityResultLauncher<Intent> startNovoTexto = registerForActivityResult(new StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
                 @Override
@@ -115,15 +129,83 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         imageView = findViewById(R.id.imageView);
-        imageView.setOnLongClickListener(e->{
-            Toast.makeText(MainActivity.this, "teste", Toast.LENGTH_LONG);
-            return true;
+
+        // Configuração do toque longo e do movimento dos textos
+        imageView.setOnTouchListener(new View.OnTouchListener() {
+            private float startX;
+            private float startY;
+
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        float touchY = event.getY() / imageView.getHeight();
+                        float touchX = event.getX() / imageView.getWidth();
+
+                        if (Math.abs(touchY - offsetYSuperior) < 0.1f) {
+                            textoSuperiorSelecionado = true;
+                            vibrar();
+                        } else if (Math.abs(touchY - offsetYInferior) < 0.1f) {
+                            textoInferiorSelecionado = true;
+                            vibrar();
+                        }
+
+                        startY = event.getY();
+                        startX = event.getX();
+                        return true;
+
+                    case MotionEvent.ACTION_MOVE:
+                        if (textoSuperiorSelecionado || textoInferiorSelecionado) {
+                            float deltaY = (event.getY() - startY) / imageView.getHeight();
+                            float deltaX = (event.getX() - startX) / imageView.getWidth();
+
+                            if (textoSuperiorSelecionado) {
+                                offsetYSuperior += deltaY;
+                                offsetXSuperior += deltaX;
+                                offsetYSuperior = Math.max(0.05f, Math.min(0.95f, offsetYSuperior));
+                                offsetXSuperior = Math.max(0.05f, Math.min(0.95f, offsetXSuperior));
+                                memeCreator.setOffsetYSuperior(offsetYSuperior);
+                                memeCreator.setOffsetXSuperior(offsetXSuperior);
+                            } else {
+                                offsetYInferior += deltaY;
+                                offsetXInferior += deltaX;
+                                offsetYInferior = Math.max(0.05f, Math.min(0.95f, offsetYInferior));
+                                offsetXInferior = Math.max(0.05f, Math.min(0.95f, offsetXInferior));
+                                memeCreator.setOffsetYInferior(offsetYInferior);
+                                memeCreator.setOffsetXInferior(offsetXInferior);
+                            }
+
+                            mostrarImagem();
+                            startY = event.getY();
+                            startX = event.getX();
+                        }
+                        return true;
+
+                    case MotionEvent.ACTION_UP:
+                        textoSuperiorSelecionado = false;
+                        textoInferiorSelecionado = false;
+                        return true;
+                }
+                return false;
+            }
         });
 
-        Bitmap imagemFundo = BitmapFactory.decodeResource(getResources(), R.drawable.fry_meme);
 
-        memeCreator = new MemeCreator("Olá", "Dandara!", Color.WHITE, Color.WHITE, 64, 64,  imagemFundo, getResources().getDisplayMetrics());
+        Bitmap imagemFundo = BitmapFactory.decodeResource(getResources(), R.drawable.fry_meme);
+        memeCreator = new MemeCreator("Olá", "Dandara!", Color.WHITE, Color.WHITE,
+                64, 64, imagemFundo, getResources().getDisplayMetrics());
         mostrarImagem();
+    }
+
+    private void vibrar() {
+        Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+        if (vibrator != null && vibrator.hasVibrator()) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                vibrator.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE));
+            } else {
+                vibrator.vibrate(100);
+            }
+        }
     }
 
     public void iniciarMudarTexto(View v) {
